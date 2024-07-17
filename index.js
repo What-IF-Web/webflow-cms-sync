@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const dotenv = require("dotenv");
 const cron = require("node-cron");
-const { executeWithTiming } = require("./helpers");
+const { executeWithTiming, convertMarkdownToHtml } = require("./helpers");
 const { cronSyncFunction, cronSyncFunction2 } = require("./cron");
 const {
 	profileSyncFunc,
@@ -267,6 +267,14 @@ app.get("/test-2", async (req, res) => {
 	}
 });
 
+app.get("/test-mkd", async (req, res) => {
+	res.send(
+		convertMarkdownToHtml(
+			`## **Understanding Business Continuity Management Software**`
+		)
+	);
+});
+
 const cronWrapper = async (syncFunction, stateKey) => {
 	const cronAfterFunc = () => {
 		state[stateKey].isJobRunning = false;
@@ -293,35 +301,35 @@ const cronWrapper = async (syncFunction, stateKey) => {
 	}
 };
 
-// Schedule polling every 120 seconds --- profiles
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(profileSyncFunc, "profiles");
-});
+// // Schedule polling every 120 seconds --- profiles
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(profileSyncFunc, "profiles");
+// });
 
-// Schedule polling every 120 seconds --- directory
+// // Schedule polling every 120 seconds --- directory
 cron.schedule("*/90 * * * * *", async () => {
 	cronWrapper(directorySyncFunc, "directory");
 });
 
-// Schedule polling every 120 seconds --- services
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(serviceSyncFunc, "services");
-});
+// // Schedule polling every 120 seconds --- services
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(serviceSyncFunc, "services");
+// });
 
-// Schedule polling every 120 seconds --- disciplines
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(disciplineSyncFunc, "disciplines");
-});
+// // Schedule polling every 120 seconds --- disciplines
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(disciplineSyncFunc, "disciplines");
+// });
 
-// Schedule polling every 120 seconds --- languages
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(languagesSyncFunc, "languages");
-});
+// // Schedule polling every 120 seconds --- languages
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(languagesSyncFunc, "languages");
+// });
 
-// Schedule polling every 120 seconds --- webflow_ID
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(addWebflowIDSyncFunc, "webflow_ID");
-});
+// // Schedule polling every 120 seconds --- webflow_ID
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(addWebflowIDSyncFunc, "webflow_ID");
+// });
 
 // Start the server
 app.listen(port, () => {

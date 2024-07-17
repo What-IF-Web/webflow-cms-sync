@@ -16,6 +16,7 @@ const {
 	generateRealIndex,
 	executeWithTiming,
 	filterExcessItemsToDelete,
+	convertMarkdownToHtml,
 } = require("./helpers");
 
 // Yellow color for console logs -- \x1b[33m%s\x1b[0m
@@ -243,20 +244,33 @@ const profileSyncFunc = async (lastCheckedDate, afterFunc = () => {}) => {
 										"Enterprise"
 											? "#EAAA08"
 											: "#54F2D6",
-									"services-rich-text": `
+									"services-rich-text":
+										airtableProfile.fields[
+											"Name (from Services) (from Disciplines)"
+										]?.length > 0
+											? `
 										<div>${airtableProfile.fields["Name (from Services) (from Disciplines)"]?.map(
 											(item) =>
 												`<div fs-cmsfilter-field="Service">${item}</div>`
-										)}</div>`?.replace(/,/g, ""),
-									"disciplines-rich-text": `
+										)}</div>`?.replace(/,/g, "")
+											: "",
+									"disciplines-rich-text":
+										airtableProfile.fields["Name (from Disciplines)"]?.length >
+										0
+											? `
 									<div>${airtableProfile.fields["Name (from Disciplines)"]?.map(
 										(item) =>
 											`<div fs-cmsfilter-field="Discipline">${item}</div>`
-									)}</div>`?.replace(/,/g, ""),
-									"languages-rich-text": `
+									)}</div>`?.replace(/,/g, "")
+											: "",
+									"languages-rich-text":
+										airtableProfile.fields["Language (from Languages #2)"]
+											?.length > 0
+											? `
 									<div>${airtableProfile.fields["Language (from Languages #2)"]?.map(
 										(item) => `<div fs-cmsfilter-field="Language">${item}</div>`
-									)}</div>`?.replace(/,/g, ""),
+									)}</div>`?.replace(/,/g, "")
+											: "",
 								},
 							}
 						);
@@ -351,21 +365,34 @@ const profileSyncFunc = async (lastCheckedDate, afterFunc = () => {}) => {
 										"Enterprise"
 											? "#EAAA08"
 											: "#54F2D6",
-									"services-rich-text": `
+									"services-rich-text":
+										airtableProfile.fields[
+											"Name (from Services) (from Disciplines)"
+										]?.length > 0
+											? `
 											<div>${airtableProfile.fields["Name (from Services) (from Disciplines)"]?.map(
 												(item) =>
 													`<div fs-cmsfilter-field="Service">${item}</div>`
-											)}</div>`?.replace(/,/g, ""),
-									"disciplines-rich-text": `
+											)}</div>`?.replace(/,/g, "")
+											: "",
+									"disciplines-rich-text":
+										airtableProfile.fields["Name (from Disciplines)"]?.length >
+										0
+											? `
 										<div>${airtableProfile.fields["Name (from Disciplines)"]?.map(
 											(item) =>
 												`<div fs-cmsfilter-field="Discipline">${item}</div>`
-										)}</div>`?.replace(/,/g, ""),
-									"languages-rich-text": `
+										)}</div>`?.replace(/,/g, "")
+											: "",
+									"languages-rich-text":
+										airtableProfile.fields["Language (from Languages #2)"]
+											?.length > 0
+											? `
 										<div>${airtableProfile.fields["Language (from Languages #2)"]?.map(
 											(item) =>
 												`<div fs-cmsfilter-field="Language">${item}</div>`
-										)}</div>`?.replace(/,/g, ""),
+										)}</div>`?.replace(/,/g, "")
+											: "",
 								},
 							}
 						);
@@ -553,8 +580,11 @@ const directoryByCitySyncFunc = async (lastCheckedDate) => {
 									"title-tag": airtableProfile.fields["Meta: Title"],
 									"meta-description":
 										airtableProfile.fields["Meta: Description"],
-									"page-body-copy":
-										airtableProfile.fields["Page Body Copy"] ?? "",
+									"page-body-copy": airtableProfile.fields["Page Body Copy"]
+										? convertMarkdownToHtml(
+												airtableProfile.fields["Page Body Copy"]
+										  )
+										: "",
 								},
 							}
 						);
@@ -608,8 +638,11 @@ const directoryByCitySyncFunc = async (lastCheckedDate) => {
 									"title-tag": airtableProfile.fields["Meta: Title"],
 									"meta-description":
 										airtableProfile.fields["Meta: Description"],
-									"page-body-copy":
-										airtableProfile.fields["Page Body Copy"] ?? "",
+									"page-body-copy": airtableProfile.fields["Page Body Copy"]
+										? convertMarkdownToHtml(
+												airtableProfile.fields["Page Body Copy"]
+										  )
+										: "",
 								},
 							}
 						);
@@ -785,8 +818,11 @@ const directoryByCountrySyncFunc = async (lastCheckedDate) => {
 									"title-tag": airtableProfile.fields["Meta: Title"],
 									"meta-description":
 										airtableProfile.fields["Meta: Description"],
-									"page-body-copy":
-										airtableProfile.fields["Page Body Copy"] ?? "",
+									"page-body-copy": airtableProfile.fields["Page Body Copy"]
+										? convertMarkdownToHtml(
+												airtableProfile.fields["Page Body Copy"]
+										  )
+										: "",
 								},
 							}
 						);
@@ -841,8 +877,11 @@ const directoryByCountrySyncFunc = async (lastCheckedDate) => {
 									"title-tag": airtableProfile.fields["Meta: Title"],
 									"meta-description":
 										airtableProfile.fields["Meta: Description"],
-									"page-body-copy":
-										airtableProfile.fields["Page Body Copy"] ?? "",
+									"page-body-copy": airtableProfile.fields["Page Body Copy"]
+										? convertMarkdownToHtml(
+												airtableProfile.fields["Page Body Copy"]
+										  )
+										: "",
 								},
 							}
 						);
@@ -1021,8 +1060,11 @@ const directoryByServiceSyncFunc = async (
 									"title-tag": airtableProfile.fields["Meta: Title"],
 									"meta-description":
 										airtableProfile.fields["Meta: Description"],
-									"page-body-copy":
-										airtableProfile.fields["Page Body Copy"] ?? "",
+									"page-body-copy": airtableProfile.fields["Page Body Copy"]
+										? convertMarkdownToHtml(
+												airtableProfile.fields["Page Body Copy"]
+										  )
+										: "",
 								},
 							}
 						);
@@ -1077,8 +1119,11 @@ const directoryByServiceSyncFunc = async (
 									"title-tag": airtableProfile.fields["Meta: Title"],
 									"meta-description":
 										airtableProfile.fields["Meta: Description"],
-									"page-body-copy":
-										airtableProfile.fields["Page Body Copy"] ?? "",
+									"page-body-copy": airtableProfile.fields["Page Body Copy"]
+										? convertMarkdownToHtml(
+												airtableProfile.fields["Page Body Copy"]
+										  )
+										: "",
 								},
 							}
 						);
