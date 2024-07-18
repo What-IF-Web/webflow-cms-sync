@@ -66,69 +66,70 @@ app.get("/test", async (req, res) => {
 			req.query.record_id
 		);
 
-		console.log({
-			fieldData: {
-				name: airtableProfile.fields["Vendor"],
-				slug: airtableProfile.fields["Slug - Final"]?.trim(),
-				"hq-city":
-					airtableProfile.fields[
-						"city_ascii (from City) (from Locations)"
-					]?.[0],
-				"hq-country": airtableProfile.fields["Country (from Locations)"]?.[0],
-				cities:
-					airtableProfile.fields[
-						"city_ascii (from City) (from Locations)"
-					]?.join(", "),
-				countries:
-					airtableProfile.fields["Country (from Locations)"]?.join(", "),
-				"no-of-staff": airtableProfile.fields["No. of Staff"],
-				languages: airtableProfile.fields["String Languages (from Languages)"],
-				"testimonial-count":
-					airtableProfile.fields["Client Testimonials"]?.length ?? 0,
-				"no-of-awards": airtableProfile.fields["Awards"]?.length ?? 0,
-				"is-in-person-2":
-					airtableProfile.fields["Meeting Capabilities"]
-						?.includes("In-person")
-						?.toString() ?? "false",
-				"is-emergency":
-					airtableProfile.fields["Is Emergency (from Profile Type)"],
-				"is-preferred-supplier":
-					airtableProfile.fields["Is Preferred Supplier?"]?.toString(),
-				service:
-					airtableProfile.fields["String Service List [from Service (Parent)]"],
-				discipline:
-					airtableProfile.fields[
-						"String Discipline List [from Discipline (Child)]"
-					],
-				logo: {
-					url: airtableProfile.fields["Logo"]?.[0]?.thumbnails?.large?.url,
-				},
+		// console.log({
+		// 	fieldData: {
+		// 		name: airtableProfile.fields["Vendor"],
+		// 		slug: airtableProfile.fields["Slug - Final"]?.trim(),
+		// 		"hq-city":
+		// 			airtableProfile.fields[
+		// 				"city_ascii (from City) (from Locations)"
+		// 			]?.[0],
+		// 		"hq-country": airtableProfile.fields["Country (from Locations)"]?.[0],
+		// 		cities:
+		// 			airtableProfile.fields[
+		// 				"city_ascii (from City) (from Locations)"
+		// 			]?.join(", "),
+		// 		countries:
+		// 			airtableProfile.fields["Country (from Locations)"]?.join(", "),
+		// 		"no-of-staff": airtableProfile.fields["No. of Staff"],
+		// 		languages: airtableProfile.fields["String Languages (from Languages)"],
+		// 		"testimonial-count":
+		// 			airtableProfile.fields["Client Testimonials"]?.length ?? 0,
+		// 		"no-of-awards": airtableProfile.fields["Awards"]?.length ?? 0,
+		// 		"is-in-person-2":
+		// 			airtableProfile.fields["Meeting Capabilities"]
+		// 				?.includes("In-person")
+		// 				?.toString() ?? "false",
+		// 		"is-emergency":
+		// 			airtableProfile.fields["Is Emergency (from Profile Type)"],
+		// 		"is-preferred-supplier":
+		// 			airtableProfile.fields["Is Preferred Supplier?"]?.toString(),
+		// 		service:
+		// 			airtableProfile.fields["String Service List [from Service (Parent)]"],
+		// 		discipline:
+		// 			airtableProfile.fields[
+		// 				"String Discipline List [from Discipline (Child)]"
+		// 			],
+		// 		logo: {
+		// 			url: airtableProfile.fields["Logo"]?.[0]?.thumbnails?.large?.url,
+		// 		},
 
-				"title-tag-seo": airtableProfile.fields["MetaTitleFinal"],
-				"meta-description-seo":
-					airtableProfile.fields["Meta Description - Final"],
-				"phone-number": airtableProfile.fields["Phone Number"]?.trim(),
-				"email-address": airtableProfile.fields["Main Email"]?.trim(),
-				tagline: airtableProfile.fields["Profile Tagline"],
-				bio: `<p>${airtableProfile.fields["Vendor Bio"]
-					?.replace(/\n\\/g, "<br><br><br>")
-					?.replace(/\n/g, "<br><br>")}</p>`,
+		// 		"title-tag-seo": airtableProfile.fields["MetaTitleFinal"],
+		// 		"meta-description-seo":
+		// 			airtableProfile.fields["Meta Description - Final"],
+		// 		"phone-number": airtableProfile.fields["Phone Number"]?.trim(),
+		// 		"email-address": airtableProfile.fields["Main Email"]?.trim(),
+		// 		tagline: airtableProfile.fields["Profile Tagline"],
+		// 		bio: `<p>${airtableProfile.fields["Vendor Bio"]
+		// 			?.replace(/\n\\/g, "<br><br><br>")
+		// 			?.replace(/\n/g, "<br><br>")}</p>`,
 
-				"website-link": airtableProfile.fields["Website URL"]?.trim(),
-				"profile-type": airtableProfile.fields["Name (from Profile Type)"]?.[0],
-				"vendor-rating":
-					Number(airtableProfile.fields["Total Vendor Rating"]?.toFixed(2)) ??
-					0,
-				// "vendor-rating": airtableProfile.fields["Total Vendor Rating"]?.toFixed(2),
-				"badge-color":
-					airtableProfile.fields["Name (from Profile Type)"][0] === "Enterprise"
-						? "#EAAA08"
-						: "#54F2D6",
-			},
-		});
+		// 		"website-link": airtableProfile.fields["Website URL"]?.trim(),
+		// 		"profile-type": airtableProfile.fields["Name (from Profile Type)"]?.[0],
+		// 		"vendor-rating":
+		// 			Number(airtableProfile.fields["Total Vendor Rating"]?.toFixed(2)) ??
+		// 			0,
+		// 		// "vendor-rating": airtableProfile.fields["Total Vendor Rating"]?.toFixed(2),
+		// 		"badge-color":
+		// 			airtableProfile.fields["Name (from Profile Type)"][0] === "Enterprise"
+		// 				? "#EAAA08"
+		// 				: "#54F2D6",
+		// 	},
+		// });
 
 		const webFl = addItemToWebflowCMS(
 			process.env.WEBFLOW_VENDOR_COLLECTION_ID,
+			process.env.WEBFLOW_TOKEN_1,
 			{
 				fieldData: {
 					name: airtableProfile.fields["Vendor"],
@@ -306,30 +307,30 @@ cron.schedule("*/90 * * * * *", async () => {
 	cronWrapper(profileSyncFunc, "profiles");
 });
 
-// // Schedule polling every 120 seconds --- directory
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(directorySyncFunc, "directory");
-});
+// // // Schedule polling every 120 seconds --- directory
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(directorySyncFunc, "directory");
+// });
 
-// Schedule polling every 120 seconds --- services
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(serviceSyncFunc, "services");
-});
+// // Schedule polling every 120 seconds --- services
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(serviceSyncFunc, "services");
+// });
 
-// Schedule polling every 120 seconds --- disciplines
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(disciplineSyncFunc, "disciplines");
-});
+// // Schedule polling every 120 seconds --- disciplines
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(disciplineSyncFunc, "disciplines");
+// });
 
-// Schedule polling every 120 seconds --- languages
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(languagesSyncFunc, "languages");
-});
+// // Schedule polling every 120 seconds --- languages
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(languagesSyncFunc, "languages");
+// });
 
-// Schedule polling every 120 seconds --- webflow_ID
-cron.schedule("*/90 * * * * *", async () => {
-	cronWrapper(addWebflowIDSyncFunc, "webflow_ID");
-});
+// // Schedule polling every 120 seconds --- webflow_ID
+// cron.schedule("*/90 * * * * *", async () => {
+// 	cronWrapper(addWebflowIDSyncFunc, "webflow_ID");
+// });
 
 // Start the server
 app.listen(port, () => {

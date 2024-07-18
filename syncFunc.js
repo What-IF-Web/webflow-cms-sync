@@ -56,10 +56,19 @@ const deleteProfiles = async (allAirtableProfiles, allWebflowCMSRecords) => {
 			async (webflowProfile) => {
 				let response;
 
-				response = await deleteWebflowCMSItem(
+				// response = await deleteWebflowCMSItem(
+				// 	process.env.WEBFLOW_VENDOR_COLLECTION_ID,
+				// 	process.env.WEBFLOW_TOKEN_1,
+				// 	webflowProfile?.id
+				// );
+
+				response = await updateWebflowCMSItem(
 					process.env.WEBFLOW_VENDOR_COLLECTION_ID,
 					process.env.WEBFLOW_TOKEN_1,
-					webflowProfile?.id
+					webflowProfile?.id,
+					{
+						isArchived: true,
+					}
 				);
 
 				console.log(

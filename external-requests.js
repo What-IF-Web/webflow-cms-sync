@@ -93,7 +93,11 @@ const addItemToWebflowCMS = async (
 
 		return response.data;
 	} catch (error) {
-		// console.error("Error updating Webflow CMS:", error);
+		console.error("Error updating Webflow CMS:", error);
+		console.error(
+			"Error updating Webflow CMS:",
+			error?.response?.data?.details
+		);
 		// throw new Error("Failed to update Webflow CMS", error);
 		if (res)
 			res.status(error.status || 500).json({
