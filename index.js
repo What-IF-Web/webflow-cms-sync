@@ -307,30 +307,30 @@ cron.schedule("*/90 * * * * *", async () => {
 	cronWrapper(profileSyncFunc, "profiles");
 });
 
-// // // Schedule polling every 120 seconds --- directory
-// cron.schedule("*/90 * * * * *", async () => {
-// 	cronWrapper(directorySyncFunc, "directory");
-// });
+// Schedule polling every 120 seconds --- directory
+cron.schedule("*/90 * * * * *", async () => {
+	cronWrapper(directorySyncFunc, "directory");
+});
 
-// // Schedule polling every 120 seconds --- services
-// cron.schedule("*/90 * * * * *", async () => {
-// 	cronWrapper(serviceSyncFunc, "services");
-// });
+// Schedule polling every 120 seconds --- services
+cron.schedule("*/90 * * * * *", async () => {
+	cronWrapper(serviceSyncFunc, "services");
+});
 
-// // Schedule polling every 120 seconds --- disciplines
-// cron.schedule("*/90 * * * * *", async () => {
-// 	cronWrapper(disciplineSyncFunc, "disciplines");
-// });
+// Schedule polling every 120 seconds --- disciplines
+cron.schedule("*/90 * * * * *", async () => {
+	cronWrapper(disciplineSyncFunc, "disciplines");
+});
 
-// // Schedule polling every 120 seconds --- languages
-// cron.schedule("*/90 * * * * *", async () => {
-// 	cronWrapper(languagesSyncFunc, "languages");
-// });
+// Schedule polling every 120 seconds --- languages
+cron.schedule("*/90 * * * * *", async () => {
+	cronWrapper(languagesSyncFunc, "languages");
+});
 
-// // Schedule polling every 120 seconds --- webflow_ID
-// cron.schedule("*/90 * * * * *", async () => {
-// 	cronWrapper(addWebflowIDSyncFunc, "webflow_ID");
-// });
+// Schedule polling every 120 seconds --- webflow_ID
+cron.schedule("*/90 * * * * *", async () => {
+	cronWrapper(addWebflowIDSyncFunc, "webflow_ID");
+});
 
 // Start the server
 app.listen(port, () => {
