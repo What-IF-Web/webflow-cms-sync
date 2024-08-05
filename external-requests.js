@@ -384,7 +384,7 @@ const fetchWebflowCMSRecordsCount = async (collectionID) => {
 	}
 };
 
-const fetchAllWebflowCMSRecords = async (collectionID) => {
+const fetchAllWebflowCMSRecords = async (collectionID, view = "") => {
 	try {
 		const recordCount = await fetchWebflowCMSRecordsCount(collectionID);
 
@@ -394,9 +394,9 @@ const fetchAllWebflowCMSRecords = async (collectionID) => {
 		for (let i = 0; i < no_of_times; i++) {
 			console.log(`Number ${i + 1}`);
 			const response = await axios.get(
-				`https://api.webflow.com/v2/collections/${collectionID}/items?limit=100&offset=${
-					i * 100
-				}`,
+				`https://api.webflow.com/v2/collections/${collectionID}/items?${
+					view ? `view=${view}` : ""
+				}limit=100&offset=${i * 100}`,
 				{
 					headers: {
 						Authorization: `Bearer ${process.env.WEBFLOW_TOKEN_GENERAL}`,
@@ -414,7 +414,7 @@ const fetchAllWebflowCMSRecords = async (collectionID) => {
 
 const fetchSingleDirectoryProfileFromAirtable = async (recordId, res) => {
 	// Make a request to Airtable API to fetch data
-	url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_DIRECTORY_BY_LOCATION_VENDOR_TABLE_ID}/${recordId}`;
+	url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_DIRECTORY_BY_SERVICE_DISCIPLINES_TABLE_ID}/${recordId}`;
 	let response;
 	try {
 		response = await axios.get(url, {

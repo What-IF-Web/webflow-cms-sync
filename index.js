@@ -216,48 +216,103 @@ app.get("/test-2", async (req, res) => {
 			req.query.record_id
 		);
 
-		const vendorObjList = airtableProfile.fields[
-			"Webflow ID (from Vendor) (from Address for Service) (from City)"
+		// const vendorObjList = airtableProfile.fields[
+		// 	"Webflow ID (from Vendor) (from Address for Service) (from City)"
+		// ]
+		// 	? airtableProfile.fields[
+		// 			"Webflow ID (from Vendor) (from Address for Service) (from City)"
+		// 	  ]
+		// 			?.map((item, index) => ({
+		// 				webflowID:
+		// 					airtableProfile.fields[
+		// 						"Webflow ID (from Vendor) (from Address for Service) (from City)"
+		// 					]?.[index],
+		// 				vendor_rating:
+		// 					airtableProfile.fields[
+		// 						"Total Vendor Rating (from Vendor) (from Address for Service) (from City)"
+		// 					]?.[index],
+		// 			}))
+		// 			?.sort((a, b) => b.vendor_rating - a.vendor_rating)
+		// 	: [];
+
+		// const data = {
+		// 	fieldData: {
+		// 		name: airtableProfile.fields["H1 Title Text"],
+		// 		slug: airtableProfile.fields["Slug"]?.trim(),
+		// 		subheading: airtableProfile.fields["Hero Summary"],
+		// 		"breadcrumb-text": airtableProfile.fields["Breadcrumb Title"],
+		// 		city: airtableProfile.fields["city_ascii (from City)"]?.[0],
+		// 		country: airtableProfile.fields["Country"]?.[0],
+		// 		"featured-vendors":
+		// 			vendorObjList?.length > 0
+		// 				? vendorObjList?.slice(0, 2)?.map((item) => item?.webflowID)
+		// 				: [],
+		// 		vendors:
+		// 			vendorObjList?.length > 2
+		// 				? vendorObjList?.slice(2)?.map((item) => item?.webflowID)
+		// 				: [],
+		// 		"title-tag": airtableProfile.fields["Meta: Title"],
+		// 		"meta-description": airtableProfile.fields["Meta: Description"],
+		// 		"page-body-copy": airtableProfile.fields["Page Body Copy"] ?? "",
+		// 	},
+		// };
+		// console.log(data);
+
+		const vendorObjList = airtableProfile.fields?.[
+			"Webflow ID (from Profiles) (from Disciplines)"
 		]
-			? airtableProfile.fields[
-					"Webflow ID (from Vendor) (from Address for Service) (from City)"
+			? airtableProfile.fields?.[
+					"Webflow ID (from Profiles) (from Disciplines)"
 			  ]
 					?.map((item, index) => ({
 						webflowID:
 							airtableProfile.fields[
-								"Webflow ID (from Vendor) (from Address for Service) (from City)"
+								"Webflow ID (from Profiles) (from Disciplines)"
 							]?.[index],
 						vendor_rating:
 							airtableProfile.fields[
-								"Total Vendor Rating (from Vendor) (from Address for Service) (from City)"
+								"Total Vendor Rating (from Profiles) (from Disciplines)"
 							]?.[index],
 					}))
 					?.sort((a, b) => b.vendor_rating - a.vendor_rating)
 			: [];
 
-		console.log({
-			fieldData: {
-				name: airtableProfile.fields["H1 Title Text"],
-				slug: airtableProfile.fields["Slug"]?.trim(),
-				subheading: airtableProfile.fields["Hero Summary"],
-				"breadcrumb-text": airtableProfile.fields["Breadcrumb Title"],
-				city: airtableProfile.fields["city_ascii (from City)"]?.[0],
-				country: airtableProfile.fields["Country"]?.[0],
-				"featured-vendors":
-					vendorObjList?.length > 0
-						? vendorObjList?.slice(0, 2)?.map((item) => item?.webflowID)
-						: [],
-				vendors:
-					vendorObjList?.length > 2
-						? vendorObjList?.slice(2)?.map((item) => item?.webflowID)
-						: [],
-				"title-tag": airtableProfile.fields["Meta: Title"],
-				"meta-description": airtableProfile.fields["Meta: Description"],
-				"page-body-copy": airtableProfile.fields["Page Body Copy"] ?? "",
-			},
-		});
+		response = await addItemToWebflowCMS(
+			process.env.WEBFLOW_DIRECTORY_COLLECTION_ID,
+			process.env.WEBFLOW_TOKEN_2,
+			{
+				fieldData: {
+					name: airtableProfile.fields["H1 Title Text"],
+					slug: airtableProfile.fields["Slug"]?.trim(),
+					subheading: airtableProfile.fields["Hero Summary"],
+					"breadcrumb-text": airtableProfile.fields["Breadcrumb Title"],
+					"hero-tag-summary": airtableProfile.fields["Hero Tag Summary"],
+					city: airtableProfile.fields?.["city_ascii (from City)"]?.[0],
+					country: airtableProfile.fields?.["Country"]?.[0],
+					"featured-vendors":
+						vendorObjList?.length > 0
+							? vendorObjList?.slice(0, 2)?.map((item) => item?.webflowID)
+							: [],
+					vendors:
+						vendorObjList?.length > 2
+							? vendorObjList?.slice(2)?.map((item) => item?.webflowID)
+							: [],
+					"title-tag": airtableProfile.fields["Meta: Title"],
+					"meta-description": airtableProfile.fields["Meta: Description"],
+					"page-body-copy": airtableProfile.fields["Page Body Copy"]
+						? convertMarkdownToHtml(airtableProfile.fields["Page Body Copy"])
+						: "",
+				},
+			}
+		);
 
-		res.json({});
+		console.log("response", response);
+		console.log(
+			"\x1b[91m%s\x1b[0m",
+			`: Creating a new Webflow CMS record for ${airtableProfile.fields["H1 Title Text"]} ${airtableProfile.fields["Slug"]} ...`
+		);
+
+		res.json(response);
 	} catch (error) {
 		console.error("Error :", error);
 		res.status(error.status || 500).json({

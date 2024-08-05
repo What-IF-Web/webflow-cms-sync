@@ -1654,7 +1654,8 @@ const addWebflowIdToProfilesSyncFunc = async (lastCheckedDate) => {
 		const updatedAirtableProfiles =
 			await fetchRecentlyUpdatedProfilesFromAirtable(lastCheckedDate);
 		const allWebflowCMSRecords = await fetchAllWebflowCMSRecords(
-			process.env.WEBFLOW_VENDOR_COLLECTION_ID
+			process.env.WEBFLOW_VENDOR_COLLECTION_ID,
+			"3%20-%20Live%20on%20Fixinc"
 		);
 
 		if (updatedAirtableProfiles.length === 0) {
